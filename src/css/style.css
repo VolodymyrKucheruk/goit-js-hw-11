@@ -1,0 +1,228 @@
+body {
+  background-color: #fff;
+  background: radial-gradient(
+    circle,
+    rgb(232, 217, 245) 0%,
+    rgb(137, 164, 253) 100%
+  );
+}
+h1 h2 h3 h4 h5 h6 {
+  margin: 0 auto;
+}
+p {
+  margin: 0 auto;
+}
+
+ul {
+  margin: 0 auto;
+}
+img {
+  display: block;
+  min-width: 100%;
+  height: auto;
+}
+.list {
+  list-style: none;
+}
+.link {
+  text-decoration: none;
+}
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  position: sticky;
+  z-index: 1000;
+  top: 0;
+  max-width: 99.2%;
+  margin: auto;
+  border-left: 0.1px solid rgb(77, 94, 221);
+  border-right: 0.1px solid rgba(112, 96, 169, 0.365);
+  margin-bottom: 15px;
+  border-radius: 20px;
+  box-shadow: rgba(0, 0, 0, 0.75) 0px 25px 20px -15px;
+
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),
+    url(https://images.pexels.com/photos/2166927/pexels-photo-2166927.jpeg?cs=srgb&dl=animal-aquarium-aquatic-2166927.jpg&fm=jpg)
+      no-repeat center center/cover;
+}
+form {
+  display: flex;
+}
+
+.header_input {
+  display: flex;
+  text-align: left;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+  width: 180px;
+  height: 35px;
+  padding-left: 8px;
+  margin: 25px 25px 25px;
+  transition: 0.4s;
+  background-color: rgb(232, 217, 245);
+  box-shadow: rgba(23, 69, 117, 0.5) 0px 8px 24px;
+}
+
+.header_input:hover {
+  border-color: rgba(218, 223, 243, 0.5);
+  box-shadow: 1px 1px 25px 10px rgba(146, 148, 248, 0.6);
+}
+
+.btn {
+  text-decoration: none;
+  border: 1px solid rgba(223, 223, 234, 0.443);
+  border-radius: 50px;
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+  color: #000000;
+  padding: 2px 15px;
+  height: 38px;
+  margin: auto;
+  box-shadow: 1px 1px 50px 10px rgba(150, 151, 188, 0.9);
+}
+
+.btn:hover {
+  box-shadow: 1px 1px 25px 10px rgba(225, 225, 244, 0.6);
+  transition: all 0.4s;
+}
+
+.btn:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  transition: all 1s;
+}
+
+.btn:hover:before {
+  left: 100%;
+}
+
+/**
+  |============================
+  | \ Section Main Style
+  |============================
+*/
+.gallery {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  margin-bottom: 30px;
+}
+.gallery,
+.photo-card {
+  opacity: 0;
+  animation: fadeIn 1.2s ease-in-out forwards;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(350px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.photo-card {
+  position: relative;
+  display: grid;
+  grid-auto-flow: row;
+  grid-template: 1fr, auto / 1fr;
+  box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px,
+    rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px,
+    rgba(0, 0, 0, 0.09) 0px 32px 16px;
+  border-radius: 10px;
+  width: auto;
+  max-width: 350px;
+  height: 280px;
+}
+
+.photo-card-img {
+  display: inline-block;
+  overflow: hidden;
+  border-radius: 10px;
+}
+.photo-card-img img {
+  transition: 0.8s;
+  display: block;
+}
+.photo-card-img img:hover {
+  transform: scale(1.15);
+}
+.current-img {
+  width: 100%;
+  height: 100%;
+}
+
+.info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(146, 148, 248, 0.95);
+  border-radius: 5%;
+  padding: 9px;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  height: 55px;
+}
+
+.info-item {
+  margin: auto;
+  padding: 2px;
+  font-size: 16px;
+  color: #000000;
+  text-align: center;
+}
+.scroll-to-top-button {
+  position: fixed;
+  bottom: -50px;
+  right: 50px;
+  font-size: 24px;
+  background-color: #5276ea;
+  color: #fff;
+  border: none;
+  border-radius: 15px;
+  padding: 10px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  box-shadow: 1px 1px 25px 10px rgba(225, 225, 244, 0.6);
+  transition: all 0.4s;
+}
+
+.scroll-to-top-button.visible {
+  bottom: 20px;
+  opacity: 1;
+  transform: rotate(360deg);
+}
+.scroll-to-top-button:hover {
+  transform: scale(1.2);
+  background-color: #f39c12;
+  box-shadow: 0 0 20px rgba(243, 156, 18, 0.8);
+}
+
