@@ -1,5 +1,4 @@
-
-import { handleScroll, generatingImages, smoothScroll } from './pixabay_api.js';
+import { handleScroll, generatingImages } from './pixabay_api.js';
 import Notiflix from 'notiflix';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
@@ -7,14 +6,21 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 const formElem = document.querySelector('.search-form');
 const galleryElem = document.querySelector('.gallery');
 const inputElem = document.querySelector('.header_input');
+const lightbox = new SimpleLightbox('.photo-card a');
+
 let page = 1;
 let lastQuery = '';
 let totalHits = 0;
-const lightbox = new SimpleLightbox('.photo-card a');
 
 inputElem.addEventListener('input', onInput);
 formElem.addEventListener('submit', onSubmit);
 inputElem.addEventListener('keydown', onKeydown);
+
+handleScroll(loadMore);
+
+const scrollToTopButton = createScrollToTopButton();
+
+window.addEventListener('scroll', handleScrollVisibility);
 
 async function onInput() {}
 async function onSubmit(event) {
@@ -25,27 +31,10 @@ async function onSubmit(event) {
 
   try {
     const data = await generatingImages(inputValue, page);
-    if (data.hits.length > 0) {
-      totalHits = data.totalHits;
-      const markup = generateImageCardsMarkup(data.hits);
-      galleryElem.insertAdjacentHTML('beforeend', markup);
-      lightbox.refresh();
-      showTotalHitsMessage(totalHits);
-    } else {
-      Notiflix.Notify.failure(
-        'Sorry, there are no images matching your search query. Please try again.'
-      );
-    }
-
-    inputElem.value = '';
-    lastQuery = inputValue;
+    handleImageData(data);
   } catch (error) {
     Notiflix.Notify.failure('An error occurred. Please try again.');
   }
-}
-
-function showTotalHitsMessage() {
-  Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
 }
 
 async function onKeydown(event) {
@@ -57,42 +46,39 @@ async function onKeydown(event) {
 
     try {
       const data = await generatingImages(inputValue, page);
-      if (data.hits.length > 0) {
-        const markup = generateImageCardsMarkup(data.hits);
-        galleryElem.insertAdjacentHTML('beforeend', markup);
-        lightbox.refresh();
-      } else {
-        Notiflix.Notify.failure(
-          'Sorry, there are no images matching your search query. Please try again.'
-        );
-      }
-
-      inputElem.value = '';
-      lastQuery = inputValue;
+      handleImageData(data);
     } catch (error) {
       Notiflix.Notify.failure('An error occurred. Please try again.');
     }
   }
 }
-handleScroll(smoothScroll);
-handleScroll(loadMore);
+
 async function loadMore() {
-  page++;
+  page += 1;
 
   try {
     const data = await generatingImages(lastQuery, page);
-    if (data.hits.length > 0) {
-      const markup = generateImageCardsMarkup(data.hits);
-      galleryElem.insertAdjacentHTML('beforeend', markup);
-      lightbox.refresh();
-    } else {
-      Notiflix.Notify.info(
-        "We're sorry, but you've reached the end of search results."
-      );
-    }
+    handleImageData(data);
   } catch (error) {
     Notiflix.Notify.failure('An error occurred. Please try again.');
   }
+}
+
+function handleImageData(data) {
+  if (data.hits.length > 0) {
+    totalHits = data.totalHits;
+    const markup = generateImageCardsMarkup(data.hits);
+    galleryElem.insertAdjacentHTML('beforeend', markup);
+    lightbox.refresh();
+    showTotalHitsMessage();
+  } else {
+    Notiflix.Notify.failure(
+      'Sorry, there are no images matching your search query. Please try again.'
+    );
+  }
+
+  inputElem.value = '';
+  lastQuery = inputElem.value;
 }
 
 function generateImageCardsMarkup(images) {
@@ -123,23 +109,33 @@ function generateImageCardsMarkup(images) {
     .join('');
 }
 
-const scrollToTopButton = document.createElement('button');
-scrollToTopButton.textContent = 'Up';
-scrollToTopButton.classList.add('scroll-to-top-button');
-document.body.appendChild(scrollToTopButton);
-scrollToTopButton.addEventListener('click', () => {
+function createScrollToTopButton() {
+  const scrollToTopButton = document.createElement('button');
+  scrollToTopButton.textContent = 'Up';
+  scrollToTopButton.classList.add('scroll-to-top-button');
+  document.body.appendChild(scrollToTopButton);
+  scrollToTopButton.addEventListener('click', scrollToTop);
+  return scrollToTopButton;
+}
+
+function scrollToTop() {
   window.scrollTo({
     top: 0,
     behavior: 'smooth',
   });
-});
-window.addEventListener('scroll', () => {
+}
+
+function handleScrollVisibility() {
   const { scrollTop } = document.documentElement;
   const scrollThreshold = 550;
+
   if (scrollTop > scrollThreshold) {
     scrollToTopButton.classList.add('visible');
   } else {
     scrollToTopButton.classList.remove('visible');
   }
-});
+}
 
+function showTotalHitsMessage() {
+  Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+}
